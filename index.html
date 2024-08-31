@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪管理指南</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%23007bff%22/></svg>">
+</head>
+<body>
+    <header>
+        <h1>情绪管理指南</h1>
+        <div class="theme-buttons">
+            <button id="light-mode" class="theme-button" title="日间模式"><i class="fas fa-sun"></i></button>
+            <button id="dark-mode" class="theme-button" title="夜间模式"><i class="fas fa-moon"></i></button>
+            <button id="system-mode" class="theme-button" title="系统模式"><i class="fas fa-laptop"></i></button>
+        </div>
+        <p class="encouragement">每一种情绪都值得被倾听和理解，你并不孤单。</p>
+    </header>
+    <main id="main-content">
+        <p class="encouragement">善待自己，接纳每一种情绪，这是通往内心平静的第一步。</p>
+        <div class="controls">
+            <input type="text" id="search" placeholder="搜索情绪、需求或应对...">
+            <select id="sort">
+                <option value="">排序方式</option>
+                <option value="emotion">按情绪排序</option>
+                <option value="need">按需求排序</option>
+                <option value="response">按应对排序</option>
+            </select>
+        </div>
+        <div id="data-container"></div>
+    </main>
+    <footer>
+        <p>&copy; 2023 情绪管理指南. 保留所有权利。</p>
+    </footer>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p id="modal-body"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

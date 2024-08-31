@@ -1,0 +1,483 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap');
+
+:root {
+    --bg-color: #f4f4f4;
+    --text-color: #333;
+    --table-bg: #fff;
+    --table-border: #ddd;
+    --table-header-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
+    --table-header-color: #fff;
+    --table-row-even: #f2f2f2;
+    --table-row-hover: #e6f3ff;
+    --button-bg: #e0e0e0;
+    --button-color: #333;
+    --button-active: #007bff;
+    --header-bg: linear-gradient(135deg, #2c3e50, #4ca1af);
+    --header-color: #fff;
+    --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Source Han Serif', source-han-serif-sc, 'PingFang SC', 'Microsoft YaHei', serif;
+    --font-sans: 'Noto Sans SC', 'Source Han Sans SC', 'Source Han Sans', source-han-sans-sc, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #f0f0f0;
+    --table-bg: #2a2a2a;
+    --table-border: #444;
+    --table-header-bg: linear-gradient(135deg, #1c2e40, #2c5364);
+    --table-header-color: #f0f0f0;
+    --table-row-even: #333;
+    --table-row-hover: #3a3a3a;
+    --button-bg: #333;
+    --button-color: #f0f0f0;
+    --button-active: #0056b3;
+    --header-bg: linear-gradient(135deg, #1c2e40, #2c5364);
+    --header-color: #f0f0f0;
+}
+
+body {
+    font-family: var(--font-sans);
+    line-height: 1.8;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    margin: 0;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: var(--header-color);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+header {
+    background: var(--header-bg);
+    color: var(--header-color);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+table {
+    display: table; /* 确保表格可见 */
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background-color: var(--table-bg);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--table-border);
+    transition: all 0.3s ease;
+}
+
+th {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    background: var(--table-header-bg);
+    color: var(--table-header-color);
+}
+
+td {
+    font-family: var(--font-sans);
+}
+
+tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+tr:hover {
+    background-color: var(--table-row-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.emotion-icon {
+    display: block;
+    margin: 0 auto 10px; /* 增加底部外边距 */
+    font-size: 1.5em;
+    transition: all 0.3s ease;
+    color: var(--emotion-color);
+}
+
+tr:hover .emotion-icon {
+    transform: scale(1.2);
+}
+
+.details-btn {
+    background-color: var(--emotion-color);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.details-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+.highlight {
+    background-color: rgba(255, 255, 0, 0.3);
+}
+
+#scroll-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--button-active);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+#scroll-top:hover {
+    background-color: var(--button-color);
+    transform: scale(1.1);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: var(--table-header-bg);
+    color: var(--table-header-color);
+    margin-top: 40px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.theme-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.theme-button {
+    background-color: var(--button-bg);
+    color: var(--button-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.theme-button:hover, .theme-button.active {
+    background-color: var(--button-active);
+    color: #fff;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 14px;
+    }
+    
+    th, td {
+        padding: 10px;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    #search, #sort {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* 添加页面加载动画 */
+.loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 在文件末尾添加以下代码 */
+table th:first-child,
+table td:first-child {
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 在文件中添加以下代码 */
+.encouragement {
+    font-family: var(--font-sans);
+    font-style: normal;
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+header .encouragement {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+main .encouragement {
+    color: var(--text-color);
+    background-color: var(--table-bg);
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* 为了确保鼓励的话在移动设备上也能正常显示 */
+@media (max-width: 768px) {
+    .encouragement {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 15% auto;
+    padding: 0;
+    border: 1px solid var(--table-border);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: var(--table-header-bg);
+    color: var(--table-header-color);
+    padding: 15px;
+    text-align: center;
+    position: relative;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.modal-body {
+    padding: 20px;
+    text-align: left;
+}
+
+.modal-emotion {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-emotion-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.modal-emotion-text {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.close {
+    color: var(--table-header-color);
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+.modal-content-wrapper {
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 20px;
+        width: 90%;
+    }
+
+    #modal-title {
+        font-size: 20px;
+    }
+
+    #modal-body {
+        font-size: 16px;
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: var(--table-bg);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#search {
+    flex-grow: 1;
+    margin-right: 15px;
+    padding: 10px;
+    border: 1px solid var(--table-border);
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+#search:focus {
+    outline: none;
+    border-color: var(--button-active);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+#sort {
+    padding: 10px;
+    border: 1px solid var(--table-border);
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#sort:focus {
+    outline: none;
+    border-color: var(--button-active);
+}
+
+@media (max-width: 768px) {
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #search, #sort {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    #sort {
+        margin-bottom: 0;
+    }
+}
+
+/* 在文件中添加或修改以下样式 */
+.emotion-cell {
+    text-align: center;
+    font-weight: bold;
+    color: var(--emotion-color);
+    transition: all 0.3s ease;
+    padding: 10px 5px; /* 增加上下内边距 */
+}
+
+.emotion-icon {
+    display: block;
+    margin: 0 auto 5px;
+    font-size: 1.5em;
+}
+
+/* 添加新样式用于文本 */
+.emotion-text {
+    display: block;
+    font-size: 0.9em;
+}
+
+#data-container {
+    display: block !important;
+}
+
+table {
+    display: table !important;
+    width: 100%;
+}
