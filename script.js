@@ -1,129 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
-    try {
-        console.log('DOM加载完成');
-        const dataContainer = document.getElementById('data-container');
-        console.log('数据容器元素:', dataContainer);
-        
-        if (!dataContainer) {
-            throw new Error('未找到数据容器元素');
-        }
-        
-        dataContainer.innerHTML = '<p>正在加载数据...</p>';
+    const dataContainer = document.getElementById('data-container');
+    dataContainer.innerHTML = '<p>正在加载数据...</p>';
 
-        console.log('开始解析CSV数据');
-        if (typeof csvData === 'undefined' || csvData === null) {
-            throw new Error('csvData 未定义或为null');
-        }
-        console.log('CSV数据类型:', typeof csvData);
-        console.log('CSV数据长度:', csvData.length);
-        console.log('CSV数据前100个字符:', csvData.substring(0, 100));
-        
-        parsedData = parseCSV(csvData);
-        console.log('CSV解析完成，开始渲染表格');
-        if (parsedData.data.length === 0) {
-            throw new Error('没有有效的数据');
-        }
-        currentData = parsedData.data;
-        renderTable(currentData);
-
-        // 确保数据容器可见
-        dataContainer.style.display = 'block';
-        console.log('表格渲染完成，数据容器已显示');
-
-        const lightModeButton = document.getElementById('light-mode');
-        const darkModeButton = document.getElementById('dark-mode');
-        const systemModeButton = document.getElementById('system-mode');
-        const body = document.body;
-
-        function setTheme(theme) {
-            console.log('设置主题:', theme);
-            document.body.classList.remove('light-mode', 'dark-mode');
-            document.querySelectorAll('.theme-button').forEach(btn => btn.classList.remove('active'));
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('dark-mode').classList.add('active');
-            } else if (theme === 'light') {
-                document.body.classList.add('light-mode');
-                document.getElementById('light-mode').classList.add('active');
-            } else {
-                // 系统模式
-                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.add('light-mode');
-                }
-                document.getElementById('system-mode').classList.add('active');
+    fetch('1.csv')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            localStorage.setItem('theme', theme);
-        }
-
-        function applyTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'system';
-            setTheme(savedTheme);
-        }
-
-        lightModeButton.addEventListener('click', () => setTheme('light'));
-        darkModeButton.addEventListener('click', () => setTheme('dark'));
-        systemModeButton.addEventListener('click', () => setTheme('system'));
-
-        applyTheme();
-
-        window.matchMedia('(prefers-color-scheme: dark)').addListener(applyTheme);
-
-        const sortSelect = document.getElementById('sort');
-        sortSelect.addEventListener('change', (e) => {
-            const sortBy = e.target.value;
-            if (sortBy) {
-                currentData = sortData(currentData, sortBy);
-                renderTable(currentData);
+            return response.text();
+        })
+        .then(data => {
+            csvData = data;
+            console.log('CSV数据加载成功，长度:', csvData.length);
+            console.log('CSV数据前100个字符:', csvData.substring(0, 100));
+            
+            parsedData = parseCSV(csvData);
+            if (!parsedData || !Array.isArray(parsedData.data) || parsedData.data.length === 0) {
+                throw new Error('解析后的数据无效或为空');
             }
-        });
-
-        const searchInput = document.getElementById('search');
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredData = parsedData.data.filter(row => 
-                row.some(cell => cell.toLowerCase().includes(searchTerm))
-            );
-            currentData = filteredData;
+            currentData = parsedData.data;
             renderTable(currentData);
-            highlightSearchResults(searchTerm);
+        })
+        .catch(error => {
+            console.error('加载CSV文件时出错:', error);
+            dataContainer.innerHTML = `<p>加载数据时出错: ${error.message}</p>`;
         });
-
-        // 显示数据容器
-        dataContainer.style.display = 'block';
-        console.log('表格渲染完成');
-    } catch (error) {
-        console.error('初始化错误:', error);
-        const errorContainer = document.getElementById('data-container') || document.body;
-        errorContainer.innerHTML = `<p>加载数据时出错: ${error.message}</p>`;
-    }
 });
-
-const csvData = `负面情绪,需求,应对,详细说明,详细
-生气,宣泄,倾听,"生气是一种常见的情绪反应，通常源于感到被冒犯、受挫或不公平对待。"
-伤心,释放、放下,倾听、陪伴,"伤心是一种情绪反应，通常源于失去重要的人或物，或者面临挫折和挑战。"
-恐惧,希望,换角度提问，给予希望,"恐惧是一种情绪反应，通常源于对未来的不确定性和潜在的威胁。"
-痛苦,倾诉,倾听、理解,"痛苦是一种情绪反应，通常源于身体上的不适或心理上的煎熬。"
-委屈,理解,还原困难场景,"委屈是一种情绪反应，通常源于感到被冒犯、受挫或不公平对待。"
-遗憾、后悔,自责,安慰、鼓励,"遗憾和后悔是一种情绪反应，通常源于对过去的失误或错过的机会感到懊恼。"
-内疚,补偿,倾听、安慰,"内疚是一种情绪反应，通常源于对自己的行为或决定感到负罪感。"
-自卑,鼓励,鼓励、赞美,"自卑是一种情绪反应，通常源于对自己的能力或价值的怀疑。"
-焦虑,害怕失去,理性分析事件,"焦虑是一种情绪反应，通常源于对未来的不确定性和潜在的损失感。"
-怨恨,复仇,消除、放下,"怨恨是一种情绪反应，通常源于对他人的不公平待遇或伤害。"
-厌烦,远离,离开,"厌烦是一种情绪反应，通常源于对重复性任务或无聊事物的厌倦。"
-痛恨,复仇,消除、放下,"痛恨是一种情绪反应，通常源于对他人的不公平待遇或伤害。"
-嫉妒,超越,换角度提问，给予希望,"嫉妒是一种情绪反应，通常源于对他人的成就或优势的羡慕。"
-尴尬,不被注视,转移话题,"尴尬是一种情绪反应，通常源于感到不自在或尴尬的情况。"
-回避,远离,离开,"回避是一种情绪反应，通常源于对某种情况或人的避免。"
-低落,安抚,转化情绪,"低落是一种情绪反应，通常源于对生活的失望或沮丧。"
-泪哀,理解、安抚,鼓励、希望,"泪哀是一种情绪反应，通常源于强烈的情感或感动。"
-忧伤、悲伤,安静,陪伴,"忧伤和悲伤是一种情绪反应，通常源于失去重要的人或物，或者面临挫折和挑战。"
-不耐烦,远离,离开,"不耐烦是一种情绪反应，通常源于对等待或忍耐的不耐烦。"`;
-
-console.log('CSV数据:', csvData);
-console.log('CSV数据长度:', csvData.length);
-console.log('CSV数据前100个字符:', csvData.substring(0, 100));
 
 let parsedData;
 let currentData = [];
@@ -151,9 +53,10 @@ function parseCSV(csv) {
         const data = lines.slice(1).map((line, index) => {
             const values = line.split(',');
             if (values.length !== headers.length) {
-                console.warn(`第${index + 2}行数据不匹配:`, values);
+                console.warn(`第${index + 2}行数据列数不匹配:`, values);
                 return null;
             }
+            // 添加更多的数据验证逻辑
             return values;
         }).filter(row => row !== null);
         
@@ -164,9 +67,11 @@ function parseCSV(csv) {
             throw new Error('CSV 数据为空或格式不正确');
         }
         
+        console.log('解析后的数据:', { headers, data });
         return { headers, data };
     } catch (error) {
         console.error('CSV解析错误:', error);
+        console.error('CSV内容:', csv);
         throw error;
     }
 }
@@ -266,89 +171,98 @@ function sortData(data, sortBy) {
 }
 
 function renderTable(data) {
-    console.log('开始渲染表格，数据行数:', data.length);
-    console.log('渲染的数据示例:', data.slice(0, 3));
-    const container = document.getElementById('data-container');
-    console.log('数据容器元素:', container);
-    
-    if (!container) {
-        console.error('未找到数据容器元素');
-        return;
-    }
-    
-    container.innerHTML = ''; // 清空容器
-    if (data.length === 0) {
-        container.innerHTML = '<p>没有找到匹配的数据</p>';
-        return;
-    }
-    const table = document.createElement('table');
-    
-    // 创建表头
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    
-    // 添加序号列的表头
-    const thNumber = document.createElement('th');
-    thNumber.textContent = '序号';
-    headerRow.appendChild(thNumber);
-    
-    parsedData.headers.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-    
-    // 创建表体
-    const tbody = document.createElement('tbody');
-    data.forEach((row, index) => {
-        const tr = document.createElement('tr');
-        tr.classList.add('fade-in');
+    try {
+        console.log('开始渲染表格');
+        console.log('数据:', data);
+        console.log('parsedData:', parsedData);
         
-        // 添加序号列
-        const tdNumber = document.createElement('td');
-        tdNumber.textContent = index + 1;
-        tr.appendChild(tdNumber);
+        if (!Array.isArray(data) || !parsedData || !Array.isArray(parsedData.headers)) {
+            throw new Error('数据结构不正确');
+        }
         
-        row.forEach((cell, cellIndex) => {
-            const td = document.createElement('td');
-            if (cellIndex === 0) {
-                // 为情绪列添加图标和样式
-                td.className = 'emotion-cell';
-                const icon = document.createElement('i');
-                icon.className = `fas ${getEmotionIcon(cell)} emotion-icon`;
-                td.appendChild(icon);
-                const textSpan = document.createElement('span');
-                textSpan.className = 'emotion-text';
-                textSpan.textContent = cell;
-                td.appendChild(textSpan);
-                const emotionColor = getEmotionColor(cell);
-                td.style.setProperty('--emotion-color', emotionColor);
-            } else {
-                td.textContent = cell;
-            }
-            tr.appendChild(td);
+        const container = document.getElementById('data-container');
+        if (!container) {
+            throw new Error('未找到数据容器元素');
+        }
+        
+        container.innerHTML = ''; // 清空容器
+        if (data.length === 0) {
+            container.innerHTML = '<p>没有找到匹配的数据</p>';
+            return;
+        }
+        const table = document.createElement('table');
+        
+        // 创建表头
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        // 添加序号列的表头
+        const thNumber = document.createElement('th');
+        thNumber.textContent = '序号';
+        headerRow.appendChild(thNumber);
+        
+        parsedData.headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            headerRow.appendChild(th);
         });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
         
-        // 添加详情按钮
-        const tdDetails = document.createElement('td');
-        const detailsBtn = document.createElement('button');
-        detailsBtn.textContent = '详情';
-        detailsBtn.className = 'details-btn';
-        detailsBtn.style.setProperty('--emotion-color', getEmotionColor(row[0]));
-        detailsBtn.onclick = () => showModal(row[0], row[3]);
-        tdDetails.appendChild(detailsBtn);
-        tr.appendChild(tdDetails);
+        // 创建表体
+        const tbody = document.createElement('tbody');
+        data.forEach((row, index) => {
+            const tr = document.createElement('tr');
+            tr.classList.add('fade-in');
+            
+            // 添加序号列
+            const tdNumber = document.createElement('td');
+            tdNumber.textContent = index + 1;
+            tr.appendChild(tdNumber);
+            
+            row.forEach((cell, cellIndex) => {
+                const td = document.createElement('td');
+                if (cellIndex === 0) {
+                    // 为情绪列添加图标和样式
+                    td.className = 'emotion-cell';
+                    const icon = document.createElement('i');
+                    icon.className = `fas ${getEmotionIcon(cell)} emotion-icon`;
+                    td.appendChild(icon);
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'emotion-text';
+                    textSpan.textContent = cell;
+                    td.appendChild(textSpan);
+                    const emotionColor = getEmotionColor(cell);
+                    td.style.setProperty('--emotion-color', emotionColor);
+                } else {
+                    td.textContent = cell;
+                }
+                tr.appendChild(td);
+            });
+            
+            // 添加详情按钮
+            const tdDetails = document.createElement('td');
+            const detailsBtn = document.createElement('button');
+            detailsBtn.textContent = '详情';
+            detailsBtn.className = 'details-btn';
+            detailsBtn.style.setProperty('--emotion-color', getEmotionColor(row[0]));
+            detailsBtn.onclick = () => showModal(row[0], row[3]);
+            tdDetails.appendChild(detailsBtn);
+            tr.appendChild(tdDetails);
+            
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
         
-        tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    
-    container.appendChild(table);
-    console.log('表格已添加到容器中，表格行数:', table.rows.length);
+        container.appendChild(table);
+        console.log('表格已添加到容器中，表格行数:', table.rows.length);
 
-    addKeyboardNavigation();
+        addKeyboardNavigation();
+    } catch (error) {
+        console.error('渲染表格时出错:', error);
+        const errorContainer = document.getElementById('data-container') || document.body;
+        errorContainer.innerHTML = `<p>渲染数据时出错: ${error.message}</p>`;
+    }
 }
 
 function addKeyboardNavigation() {
